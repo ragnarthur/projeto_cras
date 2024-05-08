@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Usuário - CRAS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos Personalizados */
+        body {
+            background-image: url('https://cdn.pixabay.com/photo/2017/07/10/23/43/question-mark-2492009_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-start; /* Ajuste para alinhamento ao topo */
+            min-height: 100vh; /* Altura mínima para cobrir a viewport, mas permite expansão */
+            padding: 10px; /* Espaçamento ao redor do conteúdo para evitar toque nas bordas */
+            color: #070707;
+            overflow: auto; /* Permite rolagem se necessário */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 100px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            width: auto;
+            max-width: 800px;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Ajuda a manter o padding dentro da largura definida */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #000000;
+        }
+        
+        .form-group { /* Novo estilo para agrupar visualmente os campos de forma mais clara */
+            margin-bottom: 15px; /* Espaçamento entre grupos de campos */
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            margin-top: 20px; /* Espaçamento acima dos botões */
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between; /* Espaçamento entre os botões */
+        }
+
+        /* Customização dos switches */
+        .form-switch {
+            margin-top: 5px;
+            padding: 0;
+            height: 26px;
+            display: block;
+            position: relative;
+        }
+
+        .form-switch .form-check-input {
+            cursor: pointer;
+            width: 42px;
+            height: 26px;
+            background-color: #eee;
+            border-radius: 50px;
+            position: relative;
+            -webkit-appearance: none;
+            appearance: none;
+            border: 1px solid #ccc;
+            transition: background-color 0.2s, border-color 0.2s;
+            vertical-align: middle;
+            outline: none;
+        }
+
+        .form-switch .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .form-switch .form-check-input:checked::after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 22px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: left 0.2s;
+        }
+
+        .form-switch .form-check-input::after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: left 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Editar Usuário</h1>
+        <form action="" method="post">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" value="{{ user.nome }}" required><br>
+
+            <label for="data_nascimento">Data de Nascimento:</label>
+            <input type="date" id="data_nascimento" name="data_nascimento" value="{{ user.data_nascimento.strftime('%Y-%m-%d') }}" required><br>
+
+            <label for="rua">Rua:</label>
+            <input type="text" id="rua" name="rua" value="{{ user.rua }}"><br>
+
+            <label for="numero">Número:</label>
+            <input type="number" id="numero" name="numero" value="{{ user.numero }}"><br>
+
+            <label for="bairro">Bairro:</label>
+            <input type="text" id="bairro" name="bairro" value="{{ user.bairro }}"><br>
+
+            <label for="telefone">Telefone:</label>
+            <input type="text" id="telefone" name="telefone" value="{{ user.telefone }}" oninput="formatTelefone(this), required" maxlength="15"><br>
+
+            <label for="rg">RG:</label>
+            <input type="text" id="rg" name="rg" value="{{ user.rg }}" oninput="formatRG(this)"><br>
+
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" name="cpf" value="{{ user.cpf }}" oninput="formatCPF(this)"><br>
+
+            <label for="tem_filho">Tem filho(s)?</label>
+            <div class="form-switch">
+                <input type="checkbox" id="tem_filho" name="tem_filho" class="form-check-input" {{ 'checked' if user.tem_filho else '' }}>
+            </div><br>
+
+            <label for="numero_filhos">Número de Filhos:</label>
+            <input type="number" id="numero_filhos" name="numero_filhos" value="{{ user.numero_filhos }}"><br>
+
+            <label for="gestante">Gestante:</label>
+            <div class="form-switch">
+                <input type="checkbox" id="gestante" name="gestante" class="form-check-input" {{ 'checked' if user.gestante else '' }}>
+            </div><br>
+
+            <label for="retirada_cesta">Data da Última Cesta:</label>
+            <input type="date" id="retirada_cesta" name="retirada_cesta" value="{{ user.retirada_cesta.strftime('%Y-%m-%d') if user.retirada_cesta else '' }}"><br>
+
+            <input type="submit" value="Atualizar">
+            <button type="button" onclick="window.location='/users'">Cancelar</button>
+        </form>
+    </div>
+    <script>
+        function formatTelefone(input) {
+            var numeros = input.value.replace(/\D/g, '');
+            var formatado = '';
+            if (numeros.length > 0) {
+                formatado += '(' + numeros.substring(0, 2);
+                if (numeros.length >= 3) {
+                    formatado += ')' + numeros.substring(2, 7);
+                    if (numeros.length >= 8) {
+                        formatado += '-' + numeros.substring(7, 11);
+                    }
+                }
+            }
+            input.value = formatado;
+        }
+
+        function formatRG(input) {
+            var numeros = input.value.replace(/\D/g, '');
+            var formatado = '';
+            for (let i = 0; i < numeros.length; i++) {
+                if (i == 2 || i == 5) formatado += '.';
+                formatado += numeros.charAt(i);
+            }
+            input.value = formatado;
+        }
+
+        function formatCPF(input) {
+            var numeros = input.value.replace(/\D/g, '');
+            var formatado = '';
+            for (let i = 0; i < numeros.length; i++) {
+                if (i == 3 || i == 6) formatado += '.';
+                if (i == 9) formatado += '-';
+                formatado += numeros.charAt(i);
+            }
+            input.value = formatado;
+        }
+
+        window.onload = function() {
+            var inputRG = document.getElementById('rg');
+            var inputCPF = document.getElementById('cpf');
+            if (inputRG.value) formatRG(inputRG);
+            if (inputCPF.value) formatCPF(inputCPF);
+        };
+    </script>
+</body>
+</html>

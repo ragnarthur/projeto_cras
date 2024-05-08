@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Página Inicial - CRAS Cadastro</title>
+    <style>
+        /* Estilos Gerais */
+body {
+    font-family: 'Arial', sans-serif;
+    background-image: url('https://cdn.pixabay.com/photo/2017/06/27/11/48/team-spirit-2447163_1280.jpg');
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    padding: 0; /* Removido padding para permitir verdadeira centralização */
+    color: white; /* Contraste para melhor leitura */
+    text-shadow: 1px 1px 2px rgb(63, 62, 62); /* Melhora a legibilidade do texto sobre fundo claro */
+    display: flex; /* Utilizando flexbox */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    height: 100vh; /* Altura total da viewport */
+}
+
+.container {
+    width: 50%;
+    text-align: center;
+    padding: 30px;
+    box-shadow: 0 2px 5px rgba(76, 75, 75, 0.1);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.5); /* Transparência para visibilidade do fundo */
+    box-sizing: border-box; /* Garante que padding não adicione largura extra */
+}
+
+h1 {
+    font-size: 42px;
+    color: #000000;
+}
+
+.button-group button {
+    background-color: #1a38a4;
+    border: none;
+    color: white;
+    padding: 13px 31px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 17px;
+    margin: 11px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.button-group button:hover {
+    background-color: #1c135c;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo ao Sistema de Cadastro do CRAS</h1>
+        <div class="button-group">
+            <button onclick="window.location='/register'">Cadastro de Pessoas</button>
+            <button onclick="window.location='/users'">Pessoas Cadastradas</button>
+        </div>
+    </div>
+    <script src="/static/scripts.js"></script>
+</body>
+</html>
