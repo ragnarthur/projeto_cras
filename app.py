@@ -21,6 +21,7 @@ def register():
         user = User(
             nome=request.form['nome'].upper(),
             data_nascimento=datetime.strptime(request.form['data_aniversario'], '%Y-%m-%d'),
+            estado_civil=request.form['estado_civil'],
             rua=request.form['rua'].upper(),
             numero=int(request.form['numero']),
             bairro=request.form['bairro'].upper(),
@@ -77,13 +78,19 @@ def register_filhos():
 @app.route('/register/conjuge', methods=['GET', 'POST'])
 def register_conjuge():
     if request.method == 'POST':
-        # Aqui vai o código para tratar a submissão do formulário de cônjuge
-        pass
+        user_id = session.get('user_id')
+        user = User.query.get_or_404(user_id)
+        user.conjuge_nome = request.form['conjuge_nome']
+        user.conjuge_cpf = request.form['conjuge_cpf']
+        user.conjuge_rg = request.form['conjuge_rg']
+        user.conjuge_data_nascimento = datetime.strptime(request.form['conjuge_data_nascimento'], '%Y-%m-%d')
+        db.session.commit()
+        return redirect(url_for('users'))
+
     user_id = session.get('user_id')
     if not user_id:
         return "Nenhum usuário selecionado para adicionar cônjuge.", 400
     return render_template('register_conjuge.html', user_id=user_id)
-
 
 @app.route('/users')
 def users():
@@ -96,12 +103,13 @@ def edit_user(id):
     if request.method == 'POST':
         user.nome = request.form['nome']
         user.data_nascimento = datetime.strptime(request.form['data_nascimento'], '%Y-%m-%d')
+        user.estado_civil = request.form['estado_civil']
+        user.telefone = request.form['telefone']
         user.rua = request.form['rua']
         user.numero = int(request.form['numero'])
         user.bairro = request.form['bairro']
         user.rg = request.form['rg']
         user.cpf = request.form['cpf']
-        user.telefone = request.form['telefone']
         user.tem_filho = 'tem_filho' in request.form
         user.numero_filhos = int(request.form['numero_filhos']) if user.tem_filho and request.form['numero_filhos'] else 0
         user.gestante = 'gestante' in request.form

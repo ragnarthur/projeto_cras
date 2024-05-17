@@ -133,8 +133,9 @@
                     </tr>
                     <tr class="details-container" id="details{{ user.id }}">
                         <td colspan="8">
+                            <strong>Estado Civil:</strong> {{ user.estado_civil | default('N/A', true) }}<br>
                             <strong>Cônjuge:</strong> {{ user.conjuge_nome | default('N/A', true) }}<br>
-                            <strong>Filhos:</strong> {{ user.filhos_nomes | default('N/A', true) }}
+                            <strong>Filhos:</strong> {{ user.numero_filhos | default('N/A', true) }}
                         </td>
                     </tr>
                     {% endfor %}
@@ -179,26 +180,25 @@
         }
 
         function deleteUser(userId, event) {
-    event.stopPropagation(); // Impede que o evento clique se propague para tr's parent.
-    if (confirm('Tem certeza que deseja excluir este usuário?')) {
-        fetch(`/delete/${userId}`, { method: 'DELETE' })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Falha na resposta do servidor');
+            event.stopPropagation(); // Impede que o evento clique se propague para tr's parent.
+            if (confirm('Tem certeza que deseja excluir este usuário?')) {
+                fetch(`/delete/${userId}`, { method: 'DELETE' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Falha na resposta do servidor');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                    window.location.reload(); // Recarrega a página para refletir a exclusão
+                })
+                .catch(error => {
+                    console.error('Erro ao processar a requisição:', error);
+                    alert('Erro ao deletar usuário: ' + error.message);
+                });
             }
-            return response.json();
-        })
-        .then(data => {
-            alert(data.message);
-            window.location.reload(); // Recarrega a página para refletir a exclusão
-        })
-        .catch(error => {
-            console.error('Erro ao processar a requisição:', error);
-            alert('Erro ao deletar usuário: ' + error.message);
-        });
-    }
-}
-
+        }
     </script>
 </body>
 </html>
