@@ -18,13 +18,13 @@ class User(db.Model):
     telefone = db.Column(db.String(20))
     tem_filho = db.Column(db.Boolean, default=False, nullable=False)
     numero_filhos = db.Column(db.Integer)
-    conjuge_nome = db.Column(db.String(100))
-    conjuge_cpf = db.Column(db.String(20))
-    conjuge_rg = db.Column(db.String(20))
-    conjuge_data_nascimento = db.Column(db.Date)
     gestante = db.Column(db.Boolean, default=False, nullable=False)
     retirada_cesta = db.Column(db.Date)
     proxima_cesta = db.Column(db.Date)
+    # Relação com Filho
+    filhos = db.relationship('Filho', backref='user', lazy=True)
+    # Relação com Cônjuges
+    conjuge = db.relationship('Conjuge', backref='user', uselist=False, lazy=True)
 
     def __repr__(self):
         return f'<User {self.nome}>'
@@ -43,7 +43,18 @@ class Filho(db.Model):
     cpf = db.Column(db.String(11), unique=True, nullable=False)
     rg = db.Column(db.String(9), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    usuario = db.relationship('User', backref=db.backref('filhos', lazy=True))
 
     def __repr__(self):
         return f'<Filho {self.nome}>'
+
+class Conjuge(db.Model):
+    __tablename__ = 'conjuge'
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    cpf = db.Column(db.String(20), unique=True, nullable=False)
+    rg = db.Column(db.String(20), nullable=False)
+    data_nascimento = db.Column(db.Date, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    def __repr__(self):
+        return f'<Conjuge {self.nome}>'

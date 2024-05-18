@@ -20,7 +20,6 @@
             justify-content: center;
             align-items: center;
         }
-
         .container {
             background-color: rgba(216, 213, 213, 0.8);
             padding: 20px;
@@ -30,49 +29,68 @@
             overflow-x: auto;
             position: relative;
         }
-
-        .fixed-header {
-            position: sticky;
-            top: 0;
-            z-index: 1020;
-        }
-
         table {
             white-space: nowrap;
             margin-top: 20px;
             width: 100%;
             border-collapse: collapse;
         }
-
         th, td {
             border: 1px solid #7f848b;
             padding: 8px;
             text-align: left;
         }
-
         th {
             background-color: #007bff;
             color: rgb(23, 22, 22);
             font-size: 19px;
         }
-
         tbody tr:nth-child(odd) {
             background-color: #f0f0f0;
         }
-
         tbody tr:nth-child(even) {
             background-color: #e0e0e0;
         }
-
         tbody tr:hover {
             background-color: #bbd7f3; /* Efeito de hover para as linhas */
         }
-
         .details-container {
             display: none;
-            background-color: #c8dafc;
+            background-color: #e2e2e2;
+            padding: 10px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
+        .detail-section {
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .detail-title {
+            font-weight: bold;
+            color: #0056b3;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .detail-info {
+            display: flex;
+            align-items: center;
+            padding: 5px 0;
+        }
+        .detail-name {
+            margin-right: 10px; /* Espaço entre o nome e o CPF */
+        }
+        .detail-label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .detail-value {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
         .button-group button {
             margin-top: 10px;
             padding: 10px 20px;
@@ -81,23 +99,16 @@
             cursor: pointer;
             border: none;
         }
-
         .button-group button:hover {
             opacity: 0.8;
         }
-
         .btn-primary {
             background-color: #007bff;
             color: white;
         }
-
         .btn-secondary {
             background-color: #6c757d;
             color: white;
-        }
-
-        .toggle-icon {
-            cursor: pointer;
         }
     </style>
 </head>
@@ -133,9 +144,38 @@
                     </tr>
                     <tr class="details-container" id="details{{ user.id }}">
                         <td colspan="8">
-                            <strong>Estado Civil:</strong> {{ user.estado_civil | default('N/A', true) }}<br>
-                            <strong>Cônjuge:</strong> {{ user.conjuge_nome | default('N/A', true) }}<br>
-                            <strong>Filhos:</strong> {{ user.numero_filhos | default('N/A', true) }}
+                            <div class="detail-section">
+                                <span class="detail-title">Estado Civil:</span>
+                                {{ user.estado_civil | default('N/A', true) }}
+                            </div>
+                            <div class="detail-section">
+                                <span class="detail-title">Cônjuge:</span>
+                                {% if user.conjuge_nome %}
+                                    <div class="detail-info">
+                                        <span class="detail-name">{{ user.conjuge_nome }}</span>
+                                        <span class="detail-value"><span class="detail-label">CPF:</span> {{ user.conjuge_cpf | default('Não disponível') }}</span>
+                                        <span class="detail-value"><span class="detail-label">RG:</span> {{ user.conjuge_rg | default('Não disponível') }}</span>
+                                    </div>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </div>
+                            <div class="detail-section">
+                                <span class="detail-title">Filhos:</span>
+                                {% if user.filhos %}
+                                    <ul>
+                                    {% for filho in user.filhos %}
+                                        <li class="detail-info">
+                                            <span class="detail-name">{{ filho.nome }}</span>
+                                            <span class="detail-value"><span class="detail-label">CPF:</span> {{ filho.cpf | default('Não disponível') }}</span>
+                                            <span class="detail-value"><span the="detail-label">RG:</span> {{ filho.rg | default('Não disponível') }}</span>
+                                        </li>
+                                    {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -154,6 +194,7 @@
             var filter = input.value.toUpperCase();
             var table = document.getElementById("userTable");
             var tr = table.getElementsByTagName("tr");
+    
             for (var i = 0; i < tr.length; i++) {
                 var td = tr[i].getElementsByTagName("td")[0];
                 if (td) {
@@ -162,23 +203,17 @@
                 }
             }
         }
-
+    
         function toggleDetails(id, event) {
             event.stopPropagation();
             var details = document.getElementById(id);
             if (details.style.display === 'none') {
                 details.style.display = 'table-row';
-                var icon = event.currentTarget.querySelector('.toggle-icon');
-                icon.classList.remove('fa-chevron-down');
-                icon.classList.add('fa-chevron-up');
             } else {
                 details.style.display = 'none';
-                var icon = event.currentTarget.querySelector('.toggle-icon');
-                icon.classList.remove('fa-chevron-up');
-                icon.classList.add('fa-chevron-down');
             }
         }
-
+    
         function deleteUser(userId, event) {
             event.stopPropagation(); // Impede que o evento clique se propague para tr's parent.
             if (confirm('Tem certeza que deseja excluir este usuário?')) {
@@ -199,6 +234,6 @@
                 });
             }
         }
-    </script>
+    </script>    
 </body>
 </html>
